@@ -1,0 +1,65 @@
+services:
+  zookeeper:
+    image: wurstmeister/zookeeper:latest
+    ports:
+      - "2181:2181"
+
+  kafka:
+    image: wurstmeister/kafka:latest
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    depends_on:
+      - zookeeper
+
+  user_service:
+    build: ./user_service
+    ports:
+      - "9002:9002"
+    environment:
+      - DATABASE_URL=postgresql://user_service_admin:1234@user_db:5432/user_service_db
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+    depends_on:
+      - kafka
+      - user_db
+
+  alert_service:
+    build: ./alert_service
+    ports:
+      - "9003:9003"
+    environment:
+      - DATABASE_URL=postgresql://alert_service_admin:1234@alert_db:5432/alert_service_db
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+    depends_on:
+      - kafka
+      - alert_db
+
+  user_db:
+    image: postgres:14
+    environment:
+      POSTGRES_USER: user_service_admin
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: user_service_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - user_db_data:/var/lib/postgresql/data
+
+  alert_db:
+    image: postgres:14
+    environment:
+      POSTGRES_USER: alert_service_admin
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: alert_service_db
+    ports:
+      - "5434:5432"
+    volumes:
+      - alert_db_data:/var/lib/postgresql/data
+
+volumes:
+  user_db_data:
+  alert_db_data:

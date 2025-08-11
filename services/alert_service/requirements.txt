@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+sqlalchemy
+python-dotenv
+passlib>=1.7.4
+psycopg2-binary
+confluent-kafka

@@ -1,8 +1,8 @@
 from fastapi import FastAPI
-import models
-from database import engine
+from app.models import models
+from app.database import engine
 
-from routers.alerts import router as alert_router
+from app.routers.alerts import router as alert_router
 
 models.Base.metadata.create_all(bind=engine)
 

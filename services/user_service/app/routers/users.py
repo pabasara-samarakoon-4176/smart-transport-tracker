@@ -4,6 +4,12 @@ from app.database import get_db
 from app.models import models
 from app.schemas import schemas
 from passlib.context import CryptContext
+from app.kafka.producer import send_user_created_event
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+KAFKA_USER_TOPIC = os.getenv("KAFKA_USER_TOPIC", "user-events")
 
 router = APIRouter(
     prefix="/users",
@@ -24,6 +30,9 @@ def register_user(user_data: schemas.RegisterSchema, db: Session = Depends(get_d
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
+
+    send_user_created_event({"id": new_user.id, "email": new_user.email})
+
     return {"message": "User registered successfully.", "user_id": new_user.id}
 
 @router.post("/login")
