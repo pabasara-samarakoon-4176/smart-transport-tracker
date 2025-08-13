@@ -27,6 +27,17 @@ services:
       - kafka
       - user_db
 
+  bus_service:
+    build: ./bus_service
+    ports:
+      - "9004:9004"
+    environment:
+      - DATABASE_URL=postgresql://bus_service_admin:1234@bus_db:5432/bus_service_db
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+    depends_on:
+      - kafka
+      - bus_db
+
   alert_service:
     build: ./alert_service
     ports:
@@ -60,6 +71,18 @@ services:
     volumes:
       - alert_db_data:/var/lib/postgresql/data
 
+  bus_db:
+    image: postgres:14
+    environment:
+      POSTGRES_USER: bus_service_admin
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: bus_service_db
+    ports:
+      - "5435:5432"
+    volumes:
+      - bus_db_data:/var/lib/postgresql/data
+
 volumes:
   user_db_data:
   alert_db_data:
+  bus_db_data:

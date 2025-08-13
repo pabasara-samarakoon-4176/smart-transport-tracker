@@ -2,6 +2,7 @@ from confluent_kafka import Consumer, KafkaError
 import json
 from app.database import SessionLocal
 from app.models.models import Alert
+from app.models.models import User
 from datetime import datetime
 import os
 
@@ -31,6 +32,18 @@ def consume_events():
         
         db = SessionLocal()
         try:
+            new_user = User(
+                id=data["id"],
+                name=data.get("name", ""),
+                phone=data.get("phone", ""),
+                email=data["email"],
+                route_id=data.get("route_id", 0),
+                latitude=data.get("latitude", 0.0),
+                longitude=data.get("longitude", 0.0),
+                timestamp=datetime.utcnow()
+            )
+            db.add(new_user)
+
             welcome_alert = Alert(
                 bus_id=0,
                 location_id=0,
@@ -38,7 +51,7 @@ def consume_events():
                 radius_m=0,
                 alert_triggered=True,
                 triggered_at=datetime.utcnow(),
-                message=f"Welcome {data['email']} to the system!"
+                message=f"Welcome {data['name']} to the system!, You have subscribed to route {data['id']}"
             )
             db.add(welcome_alert)
             db.commit()

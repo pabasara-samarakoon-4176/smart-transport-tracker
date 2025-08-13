@@ -1,9 +1,18 @@
+from datetime import datetime
 from typing import Optional
 from pydantic import BaseModel
 
 class BusBase(BaseModel):
     registration_no: str
     route_id: int
+    latitude: float
+    longitude: float
+    timestamp: datetime
+
+class trackingSchema(BaseModel):
+    id: int
+    latitude: float
+    longitude: float
 
 class BusCreate(BusBase):
     pass
