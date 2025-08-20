@@ -5,13 +5,7 @@ from app.database import get_db
 from app.models import models
 from app.schemas import schemas
 from passlib.context import CryptContext
-from app.kafka.producer import send_user_created_event
-from app.kafka.tracking_producer import send_user_location_event
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
-KAFKA_USER_TOPIC = os.getenv("KAFKA_USER_TOPIC", "user-events")
+from app.kafka.producer import send_user_created_event, send_user_location_event
 
 router = APIRouter(
     prefix="/users",
@@ -90,4 +84,10 @@ def login_user(user_data: schemas.LoginSchema, db: Session = Depends(get_db)):
     if not pwd_context.verify(user_data.password, user.password):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid email or password")
     
-    return {"message": "Login successful", "user_id": user.id}
+    return {
+        "message": "Login successful", 
+        "user_id": user.id,
+        "name": user.name,
+        "email": user.email,
+        "route_id": user.route_id
+    }

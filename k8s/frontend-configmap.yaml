@@ -1,0 +1,11 @@
+# frontend-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-config
+data:
+  config.js: |
+    window.RUNTIME_CONFIG = {
+      USER_API_BASE: "http://127.0.0.1:9002",
+      ALERT_API_BASE: "http://127.0.0.1:9003"
+    };

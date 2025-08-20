@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"bus-service","namespace":"default"},"spec":{"ports":[{"port":9004,"targetPort":9004}],"selector":{"app":"bus-service"},"type":"LoadBalancer"}}
+  creationTimestamp: "2025-08-17T06:23:31Z"
+  finalizers:
+  - service.kubernetes.io/load-balancer-cleanup
+  name: bus-service
+  namespace: default
+  resourceVersion: "140986"
+  uid: 134f2db3-b577-4b3b-be2f-efc3436ce8de
+spec:
+  allocateLoadBalancerNodePorts: true
+  clusterIP: 10.100.9.74
+  clusterIPs:
+  - 10.100.9.74
+  externalTrafficPolicy: Cluster
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - nodePort: 30311
+    port: 9004
+    protocol: TCP
+    targetPort: 9004
+  selector:
+    app: bus-service
+  sessionAffinity: None
+  type: LoadBalancer
+status:
+  loadBalancer:
+    ingress:
+    - hostname: a134f2db3b5774b3bbe2fefc3436ce8d-1829427228.us-east-1.elb.amazonaws.com

@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: bus-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: bus-service
+  ports:
+    - port: 9004
+      targetPort: 9004
+      protocol: TCP
