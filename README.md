@@ -29,6 +29,7 @@ A cloud-native microservices system for tracking public transport vehicles in re
 
 ## **Project Structure**
 
+```
 smart-transport-tracker/
 │
 ├── services/
@@ -53,6 +54,7 @@ smart-transport-tracker/
 │ └── zookeeper.yaml
 │
 └── README.md
+```
 
 ## **Local Testing (Minikube)**
 
