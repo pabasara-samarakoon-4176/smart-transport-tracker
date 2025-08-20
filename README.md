@@ -55,6 +55,7 @@ smart-transport-tracker/
 │
 └── README.md
 ```
+Get the frontend from ```https://github.com/pabasara-samarakoon-4176/smart-route-dash.git```
 
 ## **Local Testing (Minikube)**
 
