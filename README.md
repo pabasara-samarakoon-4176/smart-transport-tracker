@@ -101,6 +101,18 @@ http://localhost:8081
 
 ## **Cloud Deployment (AWS EKS)**
 
+1. Configure AWS CLI
+```
+aws configure
+```
+It will ask for:
+```
+AWS Access Key ID [None]: <your-access-key-id>
+AWS Secret Access Key [None]: <your-secret-access-key>
+Default region name [None]: us-east-1
+Default output format [None]: json
+```
+
 1. Create EKS Cluster
 ```
 eksctl create cluster \
@@ -147,3 +159,21 @@ kubectl apply -f k8s/frontend-service.yaml
 ```
 
 5. Expose service using NodePort or LoadBalancer.
+
+Forward the service port to local machine:
+```
+kubectl port-forward svc/user-service 9002:9002
+kubectl port-forward svc/alert-service 9003:9003
+kubectl port-forward svc/bus-service 9004:9004
+kubectl port-forward svc/frontend 8081:80
+```
+OR
+Exposure using Load Balancer:
+```
+kubectl patch svc user-service -p '{"spec": {"type": "LoadBalancer"}}'
+kubectl patch svc bus-service -p '{"spec": {"type": "LoadBalancer"}}'
+kubectl patch svc alert-service -p '{"spec": {"type": "LoadBalancer"}}'
+kubectl patch svc frontend -p '{"spec": {"type": "LoadBalancer"}}'
+```
+
+6. Access the frontend
